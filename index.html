@@ -1,0 +1,273 @@
+<!DOCTYPE html> 
+<html> 
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/1.4.6/tailwind.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"/> 
+<title>Reverse Geocoding</title> 
+
+
+<script>
+  const apikey = '9a87ae61010f4a1f9a038f65c16ac884';
+ //try to get user current location using getCurrentPosition() method
+ navigator.geolocation.getCurrentPosition(function(position){ 
+  lati = position.coords.latitude;
+  langu = position.coords.longitude;
+  
+  var latitude = lati;
+  var longitude = langu;
+
+  var api_url = 'https://api.opencagedata.com/geocode/v1/json'
+
+  var request_url = api_url
+    + '?'
+    + 'key=' + apikey
+    + '&q=' + encodeURIComponent(latitude + ',' + longitude)
+    + '&pretty=1'
+    + '&no_annotations=1';
+
+  // see full list of required and optional parameters:
+  // https://opencagedata.com/api#forward
+
+  let request = new XMLHttpRequest();
+  request.open('GET', request_url, true);
+
+  request.onload = function() {
+    // see full list of possible response codes:
+    // https://opencagedata.com/api#codes
+
+    if (request.status == 200 ){ 
+      // Success!
+      let data = JSON.parse(request.responseText);
+      let  currentCity = data.results[0].components.city;
+       if ( currentCity == undefined){
+       $(".load").show();
+       location.reload();
+       }
+         else  if(currentCity == "Navi Mumbai" ){
+                $(".load").hide();
+        alert("you are in " + currentCity)
+                $("#in").val(currentCity);
+        }
+        else if (currentCity == "Mumbai"){
+        alert("you are in " + currentCity)
+
+        }
+        
+  
+        
+       
+    } else if (request.status <= 500){ 
+      // We reached our target server, but it returned an error
+                           
+      console.log("unable to geocode! Response code: " + request.status);
+      let data = JSON.parse(request.responseText);
+      console.log(data.status.message);
+    } else {
+      console.log("server error");
+    }
+  };
+
+  request.onerror = function() {
+    // There was a connection error of some sort
+    console.log("unable to connect to server");        
+  };
+
+  request.send();  // make the request
+                      });         
+</script>
+
+<style type="text/css">
+*{
+margin:0;
+padding:0;
+font-family: Poppins;
+box-sizing: border-box;
+}
+body{
+margin:0;
+padding:0;
+font-family: Poppins;
+box-sizing: border-box;
+}
+.Im{
+height:4rem;
+width:4rem;
+}
+.mim2{
+height:3rem;
+width:3rem;
+
+}
+.mim{
+height:2rem;
+width:2rem;
+
+}
+.mar{
+margin-top:2.3rem;
+}
+.mar2{
+margin-top:1.8rem;
+}
+.inside{
+height:12rem;
+width:100%;
+object-fit:cover;
+}
+.lab{
+z-index:999;
+}
+button:hover{
+border:none;
+outline:none;
+}
+button:focous{
+border:none;
+outline:none;
+}
+button::selection {
+    outline: none;
+    background-color:transparent;
+    color:#a0aec0;
+    background: transparent;
+}
+.ci{
+height:18rem !important;
+width:100%;
+object-fit:cover;
+
+}
+
+.hov{
+  color: white;
+
+text-decoration:none;
+
+
+  padding: 0 15px;
+  cursor: pointer;
+  height: 32px;
+  font-size: 14px;
+  transition: all 0.2s ease-in-out;
+}
+.hov:hover {
+text-decoration:none;
+  
+  transform: scale(0.1);
+}
+
+.load{
+  position:fixed;
+  top:50%;
+  left:45%;
+  height: 40px;
+  width: 40px;
+  background: rgba(0, 0, 0, .4);
+  border-radius: 50%;
+  border-top: 2px solid #1D9AF2;
+  border-right: 2px solid transparent;
+  border-bottom:none;
+  border-left:none;
+  z-index:999;
+  animation: spinner5 700ms linear infinite;
+}
+
+@keyframes spinner5 {
+    to {
+      transform: rotate(360deg);
+    }
+}
+
+
+</style>
+</head> 
+<body class="bg-white" onload="loc()"> 
+<header class="text-gray-500  bg-white body-font">
+<br>
+  <div class="container mx-auto flex flex-wrap p-2 flex-col md:flex-row -mt-6 items-center">
+<i class="mim font-hairline fa fa-bars w3-text-dark-grey w3-xlarge -mb-2 m-4 mar w3-display-topleft"></i>
+    <a class="flex order-first lg:order-none lg:w-1/5 title-font font-medium items-center text-gray-900 lg:items-center lg:justify-center  mb-4 md:mb-0" >
+     <img class="Im  w3-round-xxlarge" src="https://image.flaticon.com/icons/svg/2921/2921855.svg">
+            <span class="ml-3 mt-5 text-gray-800 w3-large ">Farm  Basket</span>
+    </a>
+ <img src="https://image.flaticon.com/icons/png/512/145/145867.png"  class="mim2 bg-gray-300 p-1  w3-round-xxlarge mr-3 mar2 w3-display-topright">
+     </div>
+</header>
+<button class="load"></button>
+<div id="myCarousel " class="carousel slide  " data-ride="carousel">
+  <!-- Indicators -->
+  <ol class="w3-tiny mt-8 carousel-indicators">
+    <li data-target="#myCarousel" class="w3-tiny  active" data-slide-to="0" ></li>
+    <li data-target="#myCarousel" class="w3-tiny" data-slide-to="1"></li>
+    <li data-target="#myCarousel" class="w3-tiny" data-slide-to="2"></li>
+  </ol>
+
+  <!-- Wrapper for slides -->
+  <div class="carousel-inner">
+    <div class="item active">
+      <img src="https://image.shutterstock.com/image-photo/assortment-fresh-fruits-vegetables-260nw-553662235.jpg" class="ci" alt="Los Angeles">
+    </div>
+
+    <div class="item">
+      <img src="https://image.shutterstock.com/image-photo/composition-assorted-raw-organic-vegetables-260nw-598749548.jpg" class="ci" alt="Chicago">
+    </div>
+
+    <div class="item">
+      <img src="https://image.shutterstock.com/image-photo/wide-background-made-vegetables-fruits-260nw-1711434478.jpg" class="ci" alt="New York">
+    </div>
+  </div>
+
+</div>
+<br>
+<section class="text-gray-500 w3-white sec  ">
+<label class="p-1 ml-10 border-green-400 border-l-4 mb-4">&nbsp;&nbsp;Fresh Fruits & Veggies</label>
+<div  id="ap" class="mb-5 container flex h-full flex-wrap   append w  mx-auto">
+   
+   
+<div class="p-2 mb-5 t w-1/2 sm:w-1/2 md:h-80 md:w-1/2  w3-animate-zoom   w3-round-xlarge   ">
+ <div class="    w3-card-4  rounded-lg overflow-hidden text-center relative">
+<img src=" https://image.shutterstock.com/image-photo/fruits-vegetables-isolated-on-white-260nw-110036279.jpg" class="p-2 w3-tiny w3-round-large inside">
+<label class="font-bold mt-2"><i class="fa mr-1 w3-small fa-rupee-sign"></i>699</label>
+<label class="w3-text-black text-center mb-5 w3-tiny p-1 "><b>Super Value Veggies full vegetables Basket</b></label>
+<br>
+<center>
+ <a class=" w3-green w3-hover-blue hov font-bold  mb-6 w3-round-large w3-padding w3-small text-center">
+ <i class="fa fa-shopping-cart"></i>&nbsp;&nbsp;Buy Now</a></center>
+<br>
+ </div>
+ </div>
+
+<div class="p-2 mb-5  t w-1/2 sm:w-1/2 md:h-80 md:w-1/2  w3-animate-zoom   w3-round-xlarge   ">
+ <div class="    w3-card-4  rounded-lg overflow-hidden text-center relative">
+<img src="  https://image.shutterstock.com/image-photo/composition-vegetables-fruits-wicker-basket-260nw-88218493.jpg" class="p-2 w3-tiny w3-round-large inside">
+<label class="font-bold mt-2"><i class="fa mr-1 w3-small fa-rupee-sign"></i>699</label>
+<label class="w3-text-black mb-5 text-center w3-tiny p-1 "><b>Super Value Veggies full vegetables Basket</b></label>
+<br>
+<center>
+ <a class="hov w3-green w3-hover-blue  font-bold  mb-6 w3-round-large w3-small w3-padding text-center">
+ <i class="fa fa-shopping-cart"></i>&nbsp;&nbsp;Buy Now</a></center>
+<br>
+ </div>
+ </div>
+       
+
+       
+ </div>
+
+ </section>
+
+ 
+ 
+
+
+
+</body> 
+</html> 
